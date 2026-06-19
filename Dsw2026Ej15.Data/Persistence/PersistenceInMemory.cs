@@ -1,13 +1,13 @@
 namespace Dsw2026Ej15.Data.Persistence;
 
 using System.Text.Json;
-using Dsw2026Ej15.Data.dtos;
-using Dsw2026Ej15.Domain.Abstractions;
+using Dsw2026Ej15.Data.Dto;
+using Dsw2026Ej15.Domain.Interface;
 
 public class PersistenceInMemory : IPersistence
 {
     private List<Doctor> _doctors = new List<Doctor>();
-    private List<Specialty> _specialties = new List<Specialty>();
+    private List<Speciality> _specialties = new List<Speciality>();
 
     public PersistenceInMemory()
     {
@@ -18,13 +18,13 @@ public class PersistenceInMemory : IPersistence
         var jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", "specialities.json");
         var json = File.ReadAllText(jsonPath);
 
-        var specialties = JsonSerializer.Deserialize<List<SpecialtyDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
+        var specialties = JsonSerializer.Deserialize<List<SpecialityDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? [];
         if (specialties != null)
         {
-            _specialties.AddRange(specialties.Select(s => new Specialty(s.Name, s.Description, s.Id)));
+            _specialties.AddRange(specialties.Select(s => new Speciality(s.Name, s.Description, s.Id)));
         }
     }
-    public void AddDoctor(Doctor doctor)
+    public void SaveDoctor(Doctor doctor)
     {
         _doctors.Add(doctor);
     }
@@ -50,12 +50,12 @@ public class PersistenceInMemory : IPersistence
         return false;
     }
 
-    public Specialty? GetSpecialtyById(Guid id)
+    public Speciality? GetSpecialityById(Guid id)
     {
         return _specialties.SingleOrDefault(s => s.Id == id);
     }
 
-    public List<Specialty> GetAllSpecialties()
+    public List<Speciality> GetAllSpecialties()
     {
         return _specialties;
     }

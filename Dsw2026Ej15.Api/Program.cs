@@ -1,30 +1,38 @@
+using Dsw2026Ej15.Api.Middlewares;
 using Dsw2026Ej15.Data.Persistence;
-using Dsw2026Ej15.Domain.Abstractions;
+using Dsw2026Ej15.Domain.Interface;
 
-var builder = WebApplication.CreateBuilder(args);
-
-
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
-
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+namespace Dsw2026Ej15.Api
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
+            builder.Services.AddHealthChecks();
+
+
+            var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseHttpsRedirection();
+            app.UseAuthorization();
+            app.MapControllers();
+            app.MapHealthChecks("/health-check");
+            app.Run();
+        }
+        
+    }
 }
 
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

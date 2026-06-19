@@ -1,14 +1,14 @@
-namespace Dsw2026Ej15.Domain.Abstractions;
+namespace Dsw2026Ej15.Domain.Interface;
 using Dsw2026Ej15.Domain.Entities;
 
 public interface IPersistence
 {
-    void AddDoctor(Doctor doctor);
-    
+    void SaveDoctor(Doctor doctor);
+
     Doctor? GetDoctorById(Guid id);
     List<Doctor> GetAllDoctors();
     bool DeactivateDoctor(Guid id);
 
-    Specialty? GetSpecialtyById(Guid id);
-    List<Specialty> GetAllSpecialties();
+    Speciality? GetSpecialityById(Guid id);
+    List<Speciality> GetAllSpecialties();
 }

@@ -50,11 +50,7 @@ public class DoctorsController : AppController
     [HttpGet("doctors/{id:guid}")]
     public IActionResult GetDoctorById(Guid id)
     {
-        var doctor = _persistence.GetDoctorById(id);
-        if (doctor is null)
-        {
-            return NotFound();
-        }
+        var doctor = _persistence.GetDoctorById(id) ?? throw new NotFoundException("El médico no existe o no está activo");
 
         return Ok(new { doctor.Name, doctor.LicenseNumber, SpecialityName = doctor.Speciality.Name });
     }
@@ -63,11 +59,7 @@ public class DoctorsController : AppController
 
     public IActionResult DeactivateDoctor(Guid id)
     {
-        var doctor = _persistence.GetDoctorById(id);
-        if(doctor is null)
-        {
-            return NotFound();
-        }
+        var doctor = _persistence.GetDoctorById(id) ?? throw new NotFoundException("El médico no existe o no está activo");
         doctor.IsActive = false;
         return NoContent();
     }

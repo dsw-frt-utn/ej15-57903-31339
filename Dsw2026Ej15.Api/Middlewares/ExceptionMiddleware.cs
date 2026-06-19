@@ -1,4 +1,6 @@
-﻿using Dsw2026Ej15.Domain.Exceptions;
+using System.Net;
+using System.Text.Json;
+using Dsw2026Ej15.Domain.Exceptions;
 
 namespace Dsw2026Ej15.Api.Middlewares;
 
@@ -17,15 +19,23 @@ public class ExceptionMiddleware
         {
             await _next(context);
         }
-        catch (ValidationException ex)
+        catch (Exception ex)
         {
-            context.Response.StatusCode = 400;
-            await context.Response.WriteAsync(ex.Message);
+            await HandleExceptionAsync(context, ex);
         }
-        catch (Exception)
+    }
+
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex)
+    {
+        var (status, message) = ex switch
         {
-            context.Response.StatusCode = 500;
-            await context.Response.WriteAsync("Ocurrió un error interno");
-        }
+            ValidationException => (HttpStatusCode.BadRequest, ex.Message),
+            NotFoundException => (HttpStatusCode.NotFound, ex.Message),
+            _ => (HttpStatusCode.InternalServerError, "Ocurrió un error interno")
+        };
+
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = (int)status;
+        await context.Response.WriteAsync(JsonSerializer.Serialize(new { error = message }));
     }
 }

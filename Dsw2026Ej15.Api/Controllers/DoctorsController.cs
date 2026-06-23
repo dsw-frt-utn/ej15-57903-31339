@@ -60,7 +60,7 @@ public class DoctorsController : AppController
     public IActionResult DeactivateDoctor(Guid id)
     {
         var doctor = _persistence.GetDoctorById(id) ?? throw new NotFoundException("El médico no existe o no está activo");
-        doctor.IsActive = false;
+        _persistence.DeactivateDoctor(doctor.Id);
         return NoContent();
     }
 }

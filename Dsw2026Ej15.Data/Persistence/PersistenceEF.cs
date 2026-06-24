@@ -6,45 +6,45 @@ namespace Dsw2026Ej15.Data.Persistence;
 
 public class PersistenceEF : IPersistence
 {
-    private readonly Dsw2026Ej15DbContext _context;
+    private Dsw2026Ej15DbContext _context;
 
     public PersistenceEF(Dsw2026Ej15DbContext context)
     {
         _context = context;
     }
 
-    public void SaveDoctor(Doctor doctor)
+    public async Task SaveDoctorAsync(Doctor doctor)
     {
         _context.Doctors.Add(doctor);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public Doctor? GetDoctorById(Guid id)
+    public async Task<Doctor?> GetDoctorByIdAsync(Guid id)
     {
-        return _context.Doctors.Include(d => d.Speciality).FirstOrDefault(d => d.Id == id && d.IsActive);
+        return await _context.Doctors.Include(d => d.Speciality).FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
     }
 
-    public List<Doctor> GetAllDoctors()
+    public async Task<List<Doctor>> GetAllDoctorsAsync()
     {
-        return _context.Doctors.Include(d => d.Speciality).Where(d => d.IsActive).ToList();
+        return await _context.Doctors.Include(d => d.Speciality).Where(d => d.IsActive).ToListAsync();
     }
 
-    public bool DeactivateDoctor(Guid id)
+    public async Task<bool> DeactivateDoctorAsync(Guid id)
     {
-        var doctor = _context.Doctors.FirstOrDefault(d => d.Id == id && d.IsActive);
+        var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
         if (doctor == null) return false;
         doctor.IsActive = false;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return true;
     }
 
-    public Speciality? GetSpecialityById(Guid id)
+    public async Task<Speciality?> GetSpecialityByIdAsync(Guid id)
     {
-        return _context.Specialities.FirstOrDefault(s => s.Id == id);
+        return await _context.Specialities.FirstOrDefaultAsync(s => s.Id == id);
     }
 
-    public List<Speciality> GetAllSpecialties()
+    public async Task<List<Speciality>> GetAllSpecialtiesAsync()
     {
-        return _context.Specialities.ToList();
+        return await _context.Specialities.ToListAsync();
     }
 }

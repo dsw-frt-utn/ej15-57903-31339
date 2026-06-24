@@ -26,7 +26,7 @@ public class DoctorsController : AppController
             throw new ValidationException("La matricula es requerdida");
         }
 
-        var speciality = _persistence.GetSpecialityById(request.SpecialityId);
+        var speciality = await _persistence.GetSpecialityByIdAsync(request.SpecialityId);
 
         if (speciality is null)
         {
@@ -34,33 +34,32 @@ public class DoctorsController : AppController
         }
 
         var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
-        _persistence.SaveDoctor(doctor);
+        await _persistence.SaveDoctorAsync(doctor);
 
         return Created();
     }
 
 
     [HttpGet("doctors")]
-    public IActionResult GetDoctors()
+    public async Task<IActionResult> GetDoctors()
     {
-        var doctors = _persistence.GetAllDoctors();
+        var doctors = await _persistence.GetAllDoctorsAsync();
         return Ok(doctors);
     }
 
     [HttpGet("doctors/{id:guid}")]
-    public IActionResult GetDoctorById(Guid id)
+    public async Task<IActionResult> GetDoctorById(Guid id)
     {
-        var doctor = _persistence.GetDoctorById(id) ?? throw new NotFoundException("El médico no existe o no está activo");
+        var doctor = await _persistence.GetDoctorByIdAsync(id) ?? throw new NotFoundException("El médico no existe o no está activo");
 
         return Ok(new { doctor.Name, doctor.LicenseNumber, SpecialityName = doctor.Speciality.Name });
     }
 
     [HttpDelete("doctors/{id:guid}")]
-
-    public IActionResult DeactivateDoctor(Guid id)
+    public async Task<IActionResult> DeactivateDoctor(Guid id)
     {
-        var doctor = _persistence.GetDoctorById(id) ?? throw new NotFoundException("El médico no existe o no está activo");
-        _persistence.DeactivateDoctor(doctor.Id);
+        var doctor = await _persistence.GetDoctorByIdAsync(id) ?? throw new NotFoundException("El médico no existe o no está activo");
+        await _persistence.DeactivateDoctorAsync(doctor.Id);
         return NoContent();
     }
 }

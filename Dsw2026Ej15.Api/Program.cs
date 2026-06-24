@@ -12,7 +12,7 @@ namespace Dsw2026Ej15.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=dsw2026;Integrated Security=True;Connect Timeout=30;TrustServerCertificate=True";
+            var connectionString = "Server=localhost;Database=dsw2026;User Id=SA;Password=Matiasww42yi;TrustServerCertificate=True";
 
             builder.Services.AddDbContext<Dsw2026Ej15DbContext>(options =>
             {
@@ -21,7 +21,7 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
+            builder.Services.AddScoped<IPersistence, PersistenceEF>();
             builder.Services.AddHealthChecks();
 
 
@@ -40,7 +40,7 @@ namespace Dsw2026Ej15.Api
             app.MapHealthChecks("/health-check");
             app.Run();
         }
-        
+
     }
 }
 

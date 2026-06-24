@@ -7,6 +7,8 @@ public class Doctor : BaseEntity
     public bool IsActive { get; set; }
     public Speciality Speciality { get; set; }
 
+    private Doctor() { }
+
     public Doctor(string name, string licenseNumber, Speciality speciality, Guid? id = null) : base(id)
     {
         Name = name;

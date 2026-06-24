@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Dsw2026Ej15.Data;
 
-public class Dsw2026Ej15DbContext(DbContextOptions<Dsw2026Ej15DbContext> options) : DbContext(options)
+public class Dsw2026Ej15DbContext : DbContext
 {
-    public DbSet<Doctor> Doctors => Set<Doctor>();
-    public DbSet<Speciality> Specialities => Set<Speciality>();
+    public DbSet<Doctor> Doctors { get; set; }
+    public DbSet<Speciality> Specialities { get; set; }
+    public Dsw2026Ej15DbContext(DbContextOptions<Dsw2026Ej15DbContext> options) : base(options) { }
 }

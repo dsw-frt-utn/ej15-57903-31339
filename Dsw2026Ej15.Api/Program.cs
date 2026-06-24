@@ -12,9 +12,11 @@ namespace Dsw2026Ej15.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=dsw2026;Integrated Security=True;Connect Timeout=30;TrustServerCertificate=True";
+
             builder.Services.AddDbContext<Dsw2026Ej15DbContext>(options =>
             {
-                options.UseSqlServer();
+                options.UseSqlServer(connectionString);
             });
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

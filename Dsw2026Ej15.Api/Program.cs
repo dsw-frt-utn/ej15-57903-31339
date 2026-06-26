@@ -2,12 +2,10 @@ using Dsw2026Ej15.Api.Middlewares;
 using Dsw2026Ej15.Application.Interfaces;
 using Dsw2026Ej15.Application.Services;
 using Dsw2026Ej15.Data;
-using Dsw2026Ej15.Data.Dto;
 using Dsw2026Ej15.Data.Persistence;
-using Dsw2026Ej15.Domain.Entities;
+using Dsw2026Ej15.Data.Seeders;
 using Dsw2026Ej15.Domain.Interface;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 namespace Dsw2026Ej15.Api
 {
@@ -36,7 +34,8 @@ namespace Dsw2026Ej15.Api
             using (var scope = app.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<Dsw2026Ej15DbContext>();
-                await SeedSpecialities(context);
+                var seeder = new SpecialitySeeder(context);
+                await seeder.SeedAsync("Sources/specialities.json");
             }
 
             if (app.Environment.IsDevelopment())
@@ -53,24 +52,5 @@ namespace Dsw2026Ej15.Api
             app.Run();
         }
 
-        private static async Task SeedSpecialities(Dsw2026Ej15DbContext context)
-        {
-            if (await context.Specialities.AnyAsync()) return;
-
-            var json = await File.ReadAllTextAsync("Sources/specialities.json");
-            var specialitiesDto = JsonSerializer.Deserialize<List<SpecialityDto>>(json);
-
-            if (specialitiesDto == null) return;
-
-            foreach (var dto in specialitiesDto)
-            {
-                context.Specialities.Add(new Speciality(dto.Name, dto.Description, dto.Id));
-            }
-
-            await context.SaveChangesAsync();
-        }
-
     }
 }
-
-

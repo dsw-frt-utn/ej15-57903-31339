@@ -21,7 +21,7 @@ public class PersistenceEF : IPersistence
 
     public async Task<Doctor?> GetDoctorByIdAsync(Guid id)
     {
-        return await _context.Doctors.Include(d => d.Speciality).FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
+        return await _context.Doctors.Include(d => d.Speciality).SingleOrDefaultAsync(d => d.Id == id && d.IsActive);
     }
 
     public async Task<List<Doctor>> GetAllDoctorsAsync()
@@ -31,7 +31,7 @@ public class PersistenceEF : IPersistence
 
     public async Task<bool> DeactivateDoctorAsync(Guid id)
     {
-        var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
+        var doctor = await _context.Doctors.SingleOrDefaultAsync(d => d.Id == id && d.IsActive);
         if (doctor == null) return false;
         doctor.IsActive = false;
         await _context.SaveChangesAsync();
@@ -40,7 +40,7 @@ public class PersistenceEF : IPersistence
 
     public async Task<Speciality?> GetSpecialityByIdAsync(Guid id)
     {
-        return await _context.Specialities.FirstOrDefaultAsync(s => s.Id == id);
+        return await _context.Specialities.SingleOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task<List<Speciality>> GetAllSpecialtiesAsync()

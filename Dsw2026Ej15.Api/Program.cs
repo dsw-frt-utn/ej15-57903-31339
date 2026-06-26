@@ -1,4 +1,6 @@
 using Dsw2026Ej15.Api.Middlewares;
+using Dsw2026Ej15.Application.Interfaces;
+using Dsw2026Ej15.Application.Services;
 using Dsw2026Ej15.Data;
 using Dsw2026Ej15.Data.Dto;
 using Dsw2026Ej15.Data.Persistence;
@@ -25,6 +27,7 @@ namespace Dsw2026Ej15.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IPersistence, PersistenceEF>();
+            builder.Services.AddScoped<IDoctorService, DoctorService>();
             builder.Services.AddHealthChecks();
 
 

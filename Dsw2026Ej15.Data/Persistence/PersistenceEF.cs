@@ -26,7 +26,7 @@ public class PersistenceEF : IPersistence
 
     public async Task<List<Doctor>> GetAllDoctorsAsync()
     {
-        return await _context.Doctors.Include(d => d.Speciality).Where(d => d.IsActive).ToListAsync();
+        return await _context.Doctors.Include(nameof(Doctor.Speciality)).Where(d => d.IsActive).ToListAsync();
     }
 
     public async Task<bool> DeactivateDoctorAsync(Guid id)

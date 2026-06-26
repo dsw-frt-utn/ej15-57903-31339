@@ -1,5 +1,5 @@
+using Dsw2026Ej15.Application.Dtos;
 using Dsw2026Ej15.Application.Interfaces;
-using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Exceptions;
 using Dsw2026Ej15.Domain.Interface;
 
@@ -29,15 +29,17 @@ public class DoctorService : IDoctorService
         await _persistence.SaveDoctorAsync(doctor);
     }
 
-    public async Task<List<Doctor>> GetAllDoctorsAsync()
+    public async Task<List<DoctorDto>> GetAllDoctorsAsync()
     {
-        return await _persistence.GetAllDoctorsAsync();
+        var doctors = await _persistence.GetAllDoctorsAsync();
+        return doctors.Select(d => new DoctorDto(d.Name, d.LicenseNumber, d.Speciality.Name)).ToList();
     }
 
-    public async Task<Doctor> GetDoctorByIdAsync(Guid id)
+    public async Task<DoctorDto> GetDoctorByIdAsync(Guid id)
     {
-        return await _persistence.GetDoctorByIdAsync(id)
+        var doctor = await _persistence.GetDoctorByIdAsync(id)
             ?? throw new NotFoundException("El médico no existe o no está activo");
+        return new DoctorDto(doctor.Name, doctor.LicenseNumber, doctor.Speciality.Name);
     }
 
     public async Task DeactivateDoctorAsync(Guid id)

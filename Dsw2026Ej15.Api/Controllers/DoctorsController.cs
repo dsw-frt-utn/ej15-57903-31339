@@ -31,7 +31,7 @@ public class DoctorsController : AppController
     public async Task<IActionResult> GetDoctorById(Guid id)
     {
         var doctor = await _doctorService.GetDoctorByIdAsync(id);
-        return Ok(new { doctor.Name, doctor.LicenseNumber, SpecialityName = doctor.Speciality.Name });
+        return Ok(doctor);
     }
 
     [HttpDelete("doctors/{id:guid}")]

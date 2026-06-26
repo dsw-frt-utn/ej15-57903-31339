@@ -15,7 +15,7 @@ namespace Dsw2026Ej15.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = "Server=localhost;Database=dsw2026;User Id=SA;Password=Matiasww42yi;TrustServerCertificate=True";
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("La conexión 'DefaultConnection' no se encontró.");
 
             builder.Services.AddDbContext<Dsw2026Ej15DbContext>(options =>
             {

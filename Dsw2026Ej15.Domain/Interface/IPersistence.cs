@@ -3,12 +3,10 @@ using Dsw2026Ej15.Domain.Entities;
 
 public interface IPersistence
 {
-    void SaveDoctor(Doctor doctor);
-
-    Doctor? GetDoctorById(Guid id);
-    List<Doctor> GetAllDoctors();
-    bool DeactivateDoctor(Guid id);
-
-    Speciality? GetSpecialityById(Guid id);
-    List<Speciality> GetAllSpecialties();
+    Task SaveDoctor(Doctor doctor);
+    Task<Doctor?> GetDoctorById(Guid id);
+    Task<IEnumerable<Doctor>> GetAllDoctors();
+    Task <bool> DeactivateDoctor(Guid id);
+    Task<Speciality?> GetSpecialityById(Guid id);
+    Task<IEnumerable<Speciality>> GetAllSpecialties() ;
 }

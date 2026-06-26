@@ -1,6 +1,7 @@
 using Dsw2026Ej15.Application.Interfaces;
 using Dsw2026Ej15.Application.Services;
 using Dsw2026Ej15.Data.Persistence;
+using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interface;
 
 namespace Dsw2026Ej15.Api.Configuration;
@@ -13,7 +14,8 @@ public static class ServicesConfiguration
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddHealthChecks();
-        services.AddScoped<IPersistence, PersistenceEF>();
+        services.AddScoped<IDoctorRepository, DoctorRepositoryEF>();
+        services.AddScoped<IRepository<Speciality>, RepositoryEF<Speciality>>();
         services.AddScoped<IDoctorService, DoctorService>();
 
         return services;

@@ -1,5 +1,6 @@
 using Dsw2026Ej15.Application.Dtos;
 using Dsw2026Ej15.Application.Interfaces;
+using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Exceptions;
 using Dsw2026Ej15.Domain.Interface;
 
@@ -7,11 +8,13 @@ namespace Dsw2026Ej15.Application.Services;
 
 public class DoctorService : IDoctorService
 {
-    private readonly IPersistence _persistence;
+    private readonly IDoctorRepository _doctorRepository;
+    private readonly IRepository<Speciality> _specialityRepository;
 
-    public DoctorService(IPersistence persistence)
+    public DoctorService(IDoctorRepository doctorRepository, IRepository<Speciality> specialityRepository)
     {
-        _persistence = persistence;
+        _doctorRepository = doctorRepository;
+        _specialityRepository = specialityRepository;
     }
 
     public async Task CreateDoctorAsync(string name, string licenseNumber, Guid specialityId)
@@ -22,31 +25,30 @@ public class DoctorService : IDoctorService
         if (string.IsNullOrWhiteSpace(licenseNumber))
             throw new ValidationException("La matricula es requerida");
 
-        var speciality = await _persistence.GetSpecialityByIdAsync(specialityId)
+        var speciality = await _specialityRepository.GetByIdAsync(specialityId)
             ?? throw new ValidationException("La especialidad indicada no existe");
 
-        var doctor = new Doctor(name, licenseNumber, speciality);
-        await _persistence.SaveDoctorAsync(doctor);
+        await _doctorRepository.AddAsync(new Doctor(name, licenseNumber, speciality));
     }
 
     public async Task<List<DoctorDto>> GetAllDoctorsAsync()
     {
-        var doctors = await _persistence.GetAllDoctorsAsync();
+        var doctors = await _doctorRepository.GetAllActiveAsync();
         return doctors.Select(d => new DoctorDto(d.Name, d.LicenseNumber, d.Speciality.Name)).ToList();
     }
 
     public async Task<DoctorDto> GetDoctorByIdAsync(Guid id)
     {
-        var doctor = await _persistence.GetDoctorByIdAsync(id)
+        var doctor = await _doctorRepository.GetActiveByIdAsync(id)
             ?? throw new NotFoundException("El médico no existe o no está activo");
         return new DoctorDto(doctor.Name, doctor.LicenseNumber, doctor.Speciality.Name);
     }
 
     public async Task DeactivateDoctorAsync(Guid id)
     {
-        var doctor = await _persistence.GetDoctorByIdAsync(id)
+        var doctor = await _doctorRepository.GetActiveByIdAsync(id)
             ?? throw new NotFoundException("El médico no existe o no está activo");
 
-        await _persistence.DeactivateDoctorAsync(doctor.Id);
+        await _doctorRepository.DeactivateAsync(doctor.Id);
     }
 }

@@ -17,18 +17,18 @@ public class DoctorService : IDoctorService
         _specialityRepository = specialityRepository;
     }
 
-    public async Task CreateDoctorAsync(string name, string licenseNumber, Guid specialityId)
+    public async Task CreateDoctorAsync(DoctorModel.Request request)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(request.Name))
             throw new ValidationException("El nombre es requerido");
 
-        if (string.IsNullOrWhiteSpace(licenseNumber))
+        if (string.IsNullOrWhiteSpace(request.LicenseNumber))
             throw new ValidationException("La matricula es requerida");
 
-        var speciality = await _specialityRepository.GetByIdAsync(specialityId)
+        var speciality = await _specialityRepository.GetByIdAsync(request.SpecialityId)
             ?? throw new ValidationException("La especialidad indicada no existe");
 
-        await _doctorRepository.AddAsync(new Doctor(name, licenseNumber, speciality));
+        await _doctorRepository.AddAsync(new Doctor(request.Name, request.LicenseNumber, speciality));
     }
 
     public async Task<List<DoctorDto>> GetAllDoctorsAsync()

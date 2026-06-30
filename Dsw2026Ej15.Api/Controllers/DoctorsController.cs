@@ -1,4 +1,4 @@
-using Dsw2026Ej15.Api.Models;
+using Dsw2026Ej15.Application.Dtos;
 using Dsw2026Ej15.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,7 @@ public class DoctorsController : AppController
     [HttpPost("doctors")]
     public async Task<IActionResult> CreateDoctor(DoctorModel.Request request)
     {
-        await _doctorService.CreateDoctorAsync(request.Name, request.LicenseNumber, request.SpecialityId);
+        await _doctorService.CreateDoctorAsync(request);
         return Created();
     }
 

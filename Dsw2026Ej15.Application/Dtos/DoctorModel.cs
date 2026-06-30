@@ -1,4 +1,4 @@
-﻿namespace Dsw2026Ej15.Api.Models;
+﻿namespace Dsw2026Ej15.Application.Dtos;
 
 public record DoctorModel
 {

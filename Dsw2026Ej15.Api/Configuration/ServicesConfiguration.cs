@@ -1,7 +1,6 @@
 using Dsw2026Ej15.Application.Interfaces;
 using Dsw2026Ej15.Application.Services;
 using Dsw2026Ej15.Data.Persistence;
-using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interface;
 
 namespace Dsw2026Ej15.Api.Configuration;

@@ -31,10 +31,10 @@ public class DoctorService : IDoctorService
         await _doctorRepository.AddAsync(new Doctor(request.Name, request.LicenseNumber, speciality));
     }
 
-    public async Task<List<DoctorDto>> GetAllDoctorsAsync()
+    public async Task<IEnumerable<DoctorDto>> GetAllDoctorsAsync()
     {
         var doctors = await _doctorRepository.GetAllActiveAsync();
-        return doctors.Select(d => new DoctorDto(d.Name, d.LicenseNumber, d.Speciality.Name)).ToList();
+        return doctors.Select(d => new DoctorDto(d.Name, d.LicenseNumber, d.Speciality.Name));
     }
 
     public async Task<DoctorDto> GetDoctorByIdAsync(Guid id)

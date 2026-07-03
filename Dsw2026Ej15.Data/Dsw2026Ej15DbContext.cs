@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Dsw2026Ej15.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -2,6 +2,7 @@ namespace Dsw2026Ej15.Data.Persistence;
 
 using System.Text.Json;
 using Dsw2026Ej15.Data.Dto;
+using Dsw2026Ej15.Domain.Entities;
 using Dsw2026Ej15.Domain.Interface;
 
 public class PersistenceInMemory: IPersistence
@@ -58,6 +59,15 @@ public class PersistenceInMemory: IPersistence
     public async Task<IEnumerable<Speciality>> GetAllSpecialties()
     {
         return _specialties;
+    }
+    public async Task UpdateDoctor(Doctor doctor)
+    {
+        var existing = _doctors.SingleOrDefault(d => d.Id == doctor.Id);
+        if (existing != null)
+        {
+            _doctors.Remove(existing);
+            _doctors.Add(doctor);
+        }
     }
 
 }
